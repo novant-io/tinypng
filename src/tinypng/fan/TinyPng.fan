@@ -17,54 +17,33 @@ class TinyPng
   ** Create a new TinyPng instance with given API key.
   new make(Str apiKey) { this.apiKey = apiKey }
 
-  ** Compress the given file or directory.  If a directory
-  ** is given, all png files in directory will be compressed.
-  Void compress(File source, Str:Obj opts := [:])
+  ** Compress the given 'input' file and write result to 'output'
+  Void compress(File input, File output, Str:Obj opts := [:])
   {
     // sanity check
-    if (!source.exists) throw ArgErr("File not found: ${source.osPath}")
+    if (!input.exists) throw ArgErr("input not found: ${input.osPath}")
 
-    if (opts["dryRun"] == true) echo("compress [dry run]")
-    else echo("compress")
-
-    // comrpess
-    files := resolve(source)
-    files.each |f| { compressFile(f, opts) }
-
+    // compress
+    echo("compress")
+    doCompress(input, output, opts)
     echo("done!")
   }
 
-  ** Resolve source into File[]
-  private File[] resolve(File source)
-  {
-    if (source.isDir == false) return [source]
-    return source.listFiles.findAll |f| { f.ext == "png" }
-  }
-
   ** Compress file.
-  private Void compressFile(File source, Str:Obj opts)
+  private Void doCompress(File input, File output, Str:Obj opts)
   {
-    Env.cur.out.print("  ${source.osPath}...  ").flush
+    Env.cur.out.print("  ${input.osPath} -> ${output.osPath} ").flush
 
-    // read source file
-    sbuf := source.readAllBuf
+    // read input file
+    sbuf := input.readAllBuf
     slen := sbuf.size
-    smd5 := sbuf.toDigest("MD5").toHex
-    // echo("  input  size=${sbuf.size} hash=${smd5}")
 
     // compress
-    cbuf := doReqCompress(sbuf)
+    cbuf := doApiCompress(sbuf)
     clen := cbuf.size
-    cmd5 := cbuf.toDigest("MD5").toHex
-    // echo("  output size=${cbuf.size} hash=${cmd5}")
 
-    // TODO: this does not appear to ever happen; always get a reduction
-    // // short-circuit if no change
-    // if (smd5 == cmd5)
-    // {
-    //   echo("(no change)")
-    //   return
-    // }
+    // write output
+    output.out.writeBuf(cbuf).sync.close
 
     // print compression results
     diff := slen - clen
@@ -72,14 +51,11 @@ class TinyPng
     sloc := slen.toLocale("B")
     cloc := clen.toLocale("B")
     dloc := diff.toLocale("B")
-    echo("${sloc} -> ${cloc} (-${cper}%, -${dloc})")
-
-    // replace file
-    if (opts["dryRun"] != true) source.out.writeBuf(cbuf).sync.close
+    echo("[${sloc} -> ${cloc}, -${cper}%, -${dloc}]")
   }
 
   ** Send file to tinypng and download result.
-  private Buf doReqCompress(Buf source)
+  private Buf doApiCompress(Buf source)
   {
     // post source content
     wc := WebClient(`https://api.tinify.com/shrink`)

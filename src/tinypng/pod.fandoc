@@ -19,22 +19,20 @@ Usage [#usage]
 
 A simple command line tool is included:
 
-  usage: fan tinypng --key <api_key> [options] <file_or_dir>
-  options
-    --dry-run  Display compression results without overwritng file
+  usage: fan tinypng --key <api_key> <input> <output>
 
 Example:
 
-  $ fan tinypng --key <api_key> foo.png
+  $ fan tinypng --key <api_key> foo.png bar.png
   compress
-    foo.png...  57KB -> 15KB (-73.68%, -42KB)
+    foo.png -> bar.png [57KB -> 15KB, -73.68%, -42KB]
   done!
-
-By default the compressed file will replace the source image. Use the
-'dry-run' option to see compression stats without modifying original.
 
 
 API Usage [#api]
 ================
 
-  TinyPng(key).compress(file)
+To use compression from Fantom, use 'TinyPng.compress' with your API key and
+input and output files:
+
+  TinyPng(key).compress(input, output)

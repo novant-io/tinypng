@@ -16,11 +16,9 @@ class Main
   {
     // check args
     args := Env.cur.args
-    if (args.size != 3 && args.size != 4)
+    if (args.size != 4)
     {
-      echo("usage: fan tinypng --key <api_key> [options] <file_or_dir>
-            options
-              --dry-run  Display compression results without overwritng file")
+      echo("usage: fan tinypng --key <api_key> <input> <output>")
       return -1
     }
 
@@ -28,17 +26,13 @@ class Main
     if (args[0] != "--key") return abort("invalid argument: ${args.first}")
     key := args[1]
 
-    // check for options
-    aix := 2
-    dry := false
-    if (args[2] == "--dry-run") { aix++; dry=true }
-
-    // verify file
-    file := args[aix].toUri.toFile
-    if (!file.exists) return abort("file not found: ${file}")
+    // verify input
+    input  := args[2].toUri.toFile
+    output := args[3].toUri.toFile
+    if (!input.exists) return abort("file not found: ${input}")
 
     // compress
-    TinyPng(key).compress(file, ["dryRun":dry])
+    TinyPng(key).compress(input, output)
     return 0
   }
 
