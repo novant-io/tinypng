@@ -17,6 +17,7 @@ class Build : build::BuildPod
       "vcs.uri":      "https://github.com/novant-io/tinypng"
     ]
     depends = ["sys 1.0", "util 1.0", "web 1.0"]
+    resDirs = [`doc/`]
     srcDirs = [`fan/`]
     docApi  = true
     docSrc  = true
