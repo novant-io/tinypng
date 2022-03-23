@@ -1,14 +1,14 @@
-# TinyPng for Fantom
+# TinyPNG for Fantom
 
 Fantom API and command line tool for compressing PNG image files using the
-[TinyPng](https://tinypng.com) Web API.
+[TinyPNG](https://tinypng.com) Web API.
 
 Note a developer API key is required, which you can get for free on the
-TinyPng website.
+TinyPNG website.
 
 ## Installation
 
-Install into your current Fantom repo using 'fanr':
+Install into your current Fantom repo using `fanr`:
 
     $ fanr install tinypng
 
@@ -22,7 +22,7 @@ A simple command line tool is included:
 
 Example:
 
-    $ fan tinypng --key {api_key} foo.png
+    $ fan tinypng --key <api_key> foo.png
     compress
       foo.png...  57KB -> 15KB (-73.68%, -42KB)
     done!
