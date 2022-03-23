@@ -9,7 +9,7 @@
 **
 ** Command line utility for TinyPng.
 **
-class Main
+@NoDoc class Main
 {
   ** Entry-point.
   Int main()

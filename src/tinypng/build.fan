@@ -14,7 +14,8 @@ class Build : build::BuildPod
       "org.uri":      "https://novant.io/",
       "license.name": "MIT",
       "vcs.name":     "Git",
-      "vcs.uri":      "https://github.com/novant-io/tinypng"
+      "vcs.uri":      "https://github.com/novant-io/tinypng",
+      "repo.public":  "true"
     ]
     depends = ["sys 1.0", "util 1.0", "web 1.0"]
     resDirs = [`doc/`]
